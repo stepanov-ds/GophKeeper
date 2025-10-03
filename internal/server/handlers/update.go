@@ -6,18 +6,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/stepanov-ds/GophKeeper/internal/database"
+	"github.com/stepanov-ds/GophKeeper/internal/server/database"
 	"github.com/stepanov-ds/GophKeeper/internal/utils/structs"
 )
 
 func Update(c *gin.Context) {
-	//
-	// todo:
-	// добавить запросы в бд на добавление изменения
-	//
-	//
-	//
-	//
 	var bodyJSON struct {
 		ID       int64           `json:"ID,omitempty"`
 		Type     string          `json:"type"`

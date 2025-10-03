@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/pressly/goose/v3"
-	"github.com/stepanov-ds/GophKeeper/internal/config"
+	"github.com/stepanov-ds/GophKeeper/internal/server/config"
 	"github.com/stepanov-ds/GophKeeper/internal/utils/contextKeys"
 	"github.com/stepanov-ds/GophKeeper/internal/utils/structs"
 )
@@ -44,10 +44,8 @@ func RunMigrations() {
 	}
 	defer db.Close()
 
-	// Укажите директорию с миграциями
 	migrationsDir := "migrations"
 
-	// Запуск миграции
 	if err := goose.Up(db, migrationsDir); err != nil {
 		log.Fatalf("goose: failed to apply migrations: %v\n", err)
 	}
