@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/stepanov-ds/GophKeeper/internal/config"
+	"github.com/stepanov-ds/GophKeeper/internal/server/config"
 )
 
 type Claims struct {
@@ -33,7 +33,12 @@ func AuthMiddleware() gin.HandlerFunc {
 			return config.JWTKey, nil
 		})
 
-		if err != nil || !token.Valid {
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error(), "token": tokenString})
+			c.Abort()
+			return
+		}
+		if !token.Valid {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Invalid token"})
 			c.Abort()
 			return

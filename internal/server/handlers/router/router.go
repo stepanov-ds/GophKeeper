@@ -2,9 +2,9 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/stepanov-ds/GophKeeper/internal/config"
-	"github.com/stepanov-ds/GophKeeper/internal/handlers"
-	"github.com/stepanov-ds/GophKeeper/internal/handlers/middlewares"
+	"github.com/stepanov-ds/GophKeeper/internal/server/config"
+	"github.com/stepanov-ds/GophKeeper/internal/server/handlers"
+	"github.com/stepanov-ds/GophKeeper/internal/server/handlers/middlewares"
 	"github.com/stepanov-ds/GophKeeper/internal/utils"
 )
 
@@ -18,10 +18,10 @@ func Route(r *gin.Engine) {
 	}
 	cache := utils.NewMemoryCache(*config.CleanupTime)
 
-	r.GET("/login", func(ctx *gin.Context) {
+	r.POST("/loginGet", func(ctx *gin.Context) {
 		handlers.LoginGet(ctx, cache)
 	})
-	r.POST("/login", func(ctx *gin.Context) {
+	r.POST("/loginPost", func(ctx *gin.Context) {
 		handlers.LoginPost(ctx, cache)
 	})
 

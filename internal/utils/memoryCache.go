@@ -7,7 +7,7 @@ import (
 
 // Item - кэшируемый элемент
 type Item struct {
-	Value      any
+	Value      string
 	Expiration int64
 }
 
@@ -28,7 +28,7 @@ func NewMemoryCache(cleanupTime time.Duration) *MemoryCache {
 }
 
 // Set - добавляет/обновляет элемент в кэше с указанием времени жизни
-func (mc *MemoryCache) Set(key string, value any, duration time.Duration) {
+func (mc *MemoryCache) Set(key string, value string, duration time.Duration) {
 	mc.mu.Lock()
 	defer mc.mu.Unlock()
 
@@ -39,18 +39,18 @@ func (mc *MemoryCache) Set(key string, value any, duration time.Duration) {
 }
 
 // Get - получение элемента из кэша
-func (mc *MemoryCache) Get(key string) (any, bool) {
+func (mc *MemoryCache) Get(key string) (string, bool) {
 	mc.mu.RLock()
 	defer mc.mu.RUnlock()
 
 	item, found := mc.items[key]
 	if !found {
-		return nil, false
+		return "", false
 	}
 
 	// проверка на время жизни
 	if time.Now().UnixNano() > item.Expiration {
-		return nil, false
+		return "", false
 	}
 
 	return item.Value, true

@@ -9,9 +9,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/stepanov-ds/GophKeeper/internal/config"
-	"github.com/stepanov-ds/GophKeeper/internal/database"
-	"github.com/stepanov-ds/GophKeeper/internal/mail"
+	"github.com/stepanov-ds/GophKeeper/internal/server/config"
+	"github.com/stepanov-ds/GophKeeper/internal/server/database"
+	"github.com/stepanov-ds/GophKeeper/internal/server/mail"
 	"github.com/stepanov-ds/GophKeeper/internal/utils"
 	"github.com/stepanov-ds/GophKeeper/internal/utils/structs"
 )
@@ -59,7 +59,7 @@ func LoginGet(c *gin.Context, cache *utils.MemoryCache) {
 
 func LoginPost(c *gin.Context, cache *utils.MemoryCache) {
 	var bodyJSON struct {
-		Login    string `json:"login"`
+		Mail    string `json:"mail"`
 		Password string `json:"password"`
 	}
 	if err := c.ShouldBindBodyWithJSON(&bodyJSON); err != nil {
@@ -70,7 +70,7 @@ func LoginPost(c *gin.Context, cache *utils.MemoryCache) {
 		})
 		return
 	}
-	challenge, success := cache.Get(bodyJSON.Login)
+	challenge, success := cache.Get(bodyJSON.Mail)
 	if !success {
 		err := fmt.Errorf("no challenge in cache")
 		c.Error(err)
@@ -81,7 +81,7 @@ func LoginPost(c *gin.Context, cache *utils.MemoryCache) {
 	}
 
 	if challenge != bodyJSON.Password {
-		err := fmt.Errorf("invalid challenge")
+		err := fmt.Errorf("invalid challenge, server challenge: %s, http challenge: %s", challenge, bodyJSON.Password)
 		c.Error(err)
 		c.JSON(http.StatusBadRequest, structs.Response{
 			Error: err.Error(),
@@ -89,7 +89,7 @@ func LoginPost(c *gin.Context, cache *utils.MemoryCache) {
 		return
 	}
 
-	tokenString, err := generateJWT(bodyJSON.Login)
+	tokenString, err := generateJWT(bodyJSON.Mail)
 	if err != nil {
 		err := fmt.Errorf("error while generating token: %w", err)
 		c.Error(err)

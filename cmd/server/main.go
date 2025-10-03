@@ -4,9 +4,9 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/stepanov-ds/GophKeeper/internal/config"
-	"github.com/stepanov-ds/GophKeeper/internal/database"
-	"github.com/stepanov-ds/GophKeeper/internal/handlers/router"
+	"github.com/stepanov-ds/GophKeeper/internal/server/config"
+	"github.com/stepanov-ds/GophKeeper/internal/server/database"
+	"github.com/stepanov-ds/GophKeeper/internal/server/handlers/router"
 )
 
 func main() {
